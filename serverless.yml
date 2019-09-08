@@ -1,0 +1,62 @@
+# Welcome to Serverless!
+#
+# This file is the main config file for your service.
+# It's very minimal at this point and uses default values.
+# You can always add more config options for more control.
+# We've included some commented out config examples here.
+# Just uncomment any of them to get that config option.
+#
+# For full config options, check the docs:
+#    docs.serverless.com
+#
+# Happy Coding!
+
+service: minhdev-api-ecommerce # NOTE: update this with your service name
+
+# You can pin your service to only deploy with a specific Serverless version
+# Check out our docs for more details
+# frameworkVersion: "=X.X.X"
+
+custom:
+  defaultStage: dev
+
+provider:
+  name: aws
+  runtime: dotnetcore2.1
+  region: ap-southeast-2
+  memorySize: 512 # optional, in MB, default is 1024
+  stage: ${opt:stage, self:custom.defaultStage}
+  environment:
+    resourceEndpoint: ${opt:resourceEndpoint}
+    token: ${opt:token}
+
+package:
+  artifact: src/Minhdev.Api.Ecommerce/bin/release/netcoreapp2.1/minhdev-api-ecommerce.zip
+
+functions:
+  get-user:
+    handler: Minhdev.Api.Ecommerce::Minhdev.Api.Ecommerce.Handler::GetUser
+    reservedConcurrency: 5
+    events:
+      - http:
+          path: api/answers/user
+          method: get
+          private: false
+
+  sort-products:
+    handler: Minhdev.Api.Ecommerce::Minhdev.Api.Ecommerce.Handler::SortProducts
+    reservedConcurrency: 5
+    events:
+      - http:
+          path: api/answers/sort
+          method: get
+          private: false
+
+  trolley-total:
+    handler: Minhdev.Api.Ecommerce::Minhdev.Api.Ecommerce.Handler::TrolleyTotal
+    reservedConcurrency: 5
+    events:
+      - http:
+          path: api/answers/trolleyTotal
+          method: post
+          private: false
